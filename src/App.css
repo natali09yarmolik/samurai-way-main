@@ -8,27 +8,7 @@
   grid-template-columns: 2fr 10fr;
   grid-gap: 10px;
 }
-.header{
-  grid-area: h;
-  background-color: aqua;
-}
-.header img{
-  width: 20px;
-  height: 20px;
-}
-.nav{
-  grid-area: n;
-  background-color: blue;
-}
-.content{
-  grid-area: c;
-  background-color: blueviolet;
-}
-.content img{
-  width: 100%;
-  height: 100px;
-}
-.img_cat{
-  width: 100px;
-  height: 150px;
-}
+
+
+
+
