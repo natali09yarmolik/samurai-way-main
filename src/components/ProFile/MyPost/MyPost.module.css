@@ -1,5 +1,12 @@
-
+.img_cat img{
+    width: 100px;
+    height: 150px;
+}
 
 .posts{
     color: chocolate;
+    margin-top: 15px;
+}
+.myPostBlock{
+    padding: 20px;
 }
