@@ -1,8 +1,11 @@
 .dialogs{
     width: 500px;
+    min-height: 100%;
+    height: auto;
+    margin-left: 50px;
     display: grid;
     grid-template-columns: 150px 350px;
-
+    border: 1px solid red;
 }
 .dialogItems{
     width: 30%;
@@ -14,16 +17,7 @@
     gap: 15px;
 
 }
-.dialog{
-    font-style: oblique;
-    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
-    font-size: 18px;
-    font-weight: bold;
-    color: blueviolet;
-}
-.dialog .active{
-    color: darkturquoise;
-}
+
 .messages{
     width: 70%;
     display: flex;
@@ -31,10 +25,21 @@
     justify-content: right;
     gap: 15px;
 }
-.message{
-    font-style: oblique;
-    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+.sendMessage{
+    margin-left: 200px;
+    display: flex;
+    flex-direction: column;
+justify-content: center;
+    align-items: center;
+}
+.inputMessage{
+    border-radius: 25px/25px;
+}
+.addMessage{
+    width: 130px;
+    height: 30px;
     font-size: 16px;
-    font-weight: normal;
-    color: #bf14d9;
+    background-color: darkturquoise;
+    border-radius: 15px/15px;
+    border: transparent;
 }

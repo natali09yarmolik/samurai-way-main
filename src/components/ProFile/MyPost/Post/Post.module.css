@@ -1,4 +1,10 @@
 
 .item{
-    color: cornflowerblue;
+    color: #320364;
+}
+ .postAvatar{
+    display: block;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
 }

@@ -1,4 +1,6 @@
 .nav{
+
+    height: auto;
     grid-area: n;
     background-color: blue;
     display: grid;

@@ -1,0 +1,16 @@
+.sideBar{
+    width: 100%;
+
+}
+.title{
+    text-align: center;
+    font-size: 30px;
+    font-family: "JetBrains Mono Medium", sans-serif;
+    color: white;
+    margin-bottom: 30px;
+}
+.blockFriend{
+    display: grid;
+    grid-template-columns: 33% 33% 33%;
+    gap: 10px
+}

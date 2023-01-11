@@ -1,37 +1,46 @@
-import React from 'react';
+import React, {ChangeEvent} from 'react';
 import d from './Dialogs.module.css'
-import {NavLink} from "react-router-dom";
+import {Dialog} from "./dialogItem/dialogsItem";
+import {Message} from "./messageItem/messageItems";
+import {dialogPageType} from "../../redux/store";
 
-type dialogPropsType={
-    name: string
-    id: number
-}
-const Dialog = (props:dialogPropsType)=>{
-    return (
-        <div className={d.dialog}>
-            <NavLink to={'/dialogs/'+ props.id}>{props.name}</NavLink>
-        </div>)
-}
 
-type messagePropsType={
-    text: string
-}
-const Message =(props:messagePropsType)=>{
-    return(<div className={d.message}>{props.text}</div>)
-}
+type dialogsPropsType = {
 
-export const Dialogs = (props:any)=>{
-return (<div className={d.dialogs}>
-    <div className={d.dialogItems}>
-        <Dialog name={'Natali'} id={1}/>
-        <Dialog name={'Victor'} id={2}/>
-        <Dialog name={'Dima'} id={3}/>
-        <Dialog name={'Oleg'} id={4}/>
-    </div>
-    <div className={d.messages}>
-        <Message text={'Hello'} />
-        <Message text={'How are you?'} />
-        <Message text={'Good'} />
-    </div>
-</div>)
+    dialogPage: dialogPageType
+    onChangeMessage: (newMessage: string) => void
+    onClickButton: () => void
+}
+export const Dialogs = (props: dialogsPropsType) => {
+
+    let dialogElements = props.dialogPage.dialogs.map((el) =>
+        <Dialog key={el.id} name={el.name} id={el.id}/>);
+    let messageElement = props.dialogPage.messages.map((el) =>
+        <Message key={el.id} text={el.text}/>)
+
+    const onChangeMessage = (e: ChangeEvent<HTMLTextAreaElement>) => {
+        let newMessage = e.target.value
+        props.onChangeMessage(newMessage)
+    }
+    const onClickButton = () => {
+        props.onClickButton()
+    }
+
+    return (<div className={d.dialogs}>
+        <div className={d.dialogItems}>
+            {dialogElements}
+        </div>
+        <div className={d.messages}>
+            {messageElement}
+        </div>
+        <div className={d.sendMessage}>
+            <div><textarea className={d.inputMessage}
+                           onChange={onChangeMessage}
+                           placeholder={'Enter your message...'}
+                           value={props.dialogPage.newMessage}></textarea></div>
+            <button className={d.addMessage}
+                    onClick={onClickButton}>Add message
+            </button>
+        </div>
+    </div>)
 }

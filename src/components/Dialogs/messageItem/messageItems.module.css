@@ -1,0 +1,19 @@
+
+.message{
+    margin-left: 100px;
+    display: grid;
+    grid-template-columns: 150px 60px;
+    justify-items: flex-end;
+    align-items: center;
+    font-style: oblique;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+    font-size: 18px;
+    font-weight: normal;
+    color: #bf14d9;
+}
+.messageAvatar{
+    display: block;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
