@@ -4,40 +4,42 @@ import s from './users.module.css'
 
 import axios from "axios";
 import userPhoto from "../../Avatars/ava-vk-animal-91.jpg"
+import {useSelector} from "react-redux";
+import {AppStateType} from "../../redux/reduxStore";
+import {UsersType} from "../../redux/usersReduser";
 
 export type UsersPropsType={
     users: UsersType[]
     follow:(id:number)=>void
     unFollow:(id:number)=>void
     setUsers:(users:UsersType[])=>void
+    setCurrentPage:(id:number)=>void
+    setTotalUsersCount:(id:number)=>void
+    setIsFetching:(fetching:boolean)=>void
+    setFollowingProgress:(id:number, dispatch:boolean)=>void
 
 }
-export type UsersType={
-    id: number
-    name: string
-    status:string
-    photos: photosType
-    followed: boolean
 
-}
-type photosType={
-    small: string
-    large: string
-}
 export const Users = (props:UsersPropsType)=>{
-    const getUsers=()=>{
-debugger
 
-        if(props.users.length===undefined)
-        { axios.get("https://social-network.samuraijs.com/api/1.0/users/").then(
-            response=>{props.setUsers(response.data.items)})}
+    const users=useSelector<AppStateType, UsersType[]>(state => state.usersPage.users)
+
+    const getUsers=()=>{
+        if(users.length===0)
+        {
+            axios.get("https://social-network.samuraijs.com/api/1.0/users",
+                {withCredentials: true})
+                .then(
+            response=>{props.setUsers(response.data.items)})
+
+        }
+
     }
 
-    console.log(props.users.length)
+
     return(<div>
             <button onClick={()=>getUsers()}>get users</button>
-            {props.users.length !== undefined ? props.users.map(el => <div key={el.id}
-                                                                           className={s.container}>
+            {users.map(el => <div key={el.id} className={s.container}>
                     <div className={s.blockImg}>
                         <div className={s.photo}>
                             <img src={el.photos.small != null ? el.photos.small : userPhoto}
@@ -62,7 +64,7 @@ debugger
 
 
                 </div>)
-                : ""}
+                }
 
         </div>
     )

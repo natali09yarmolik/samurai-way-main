@@ -1,23 +1,34 @@
-import {UsersType} from "../components/Users/Users";
 
 
-type LocationType={
-    city:string
-    country:string
-}
-/*export type UserType={
-    id: string
-    photo: string
+export type UsersType={
+    id: number
+    name: string
+    status:string
+    uniqueUrlName:string
+    photos: photosType
     followed: boolean
-    fullName:string
-    status: string
-    location: LocationType
-}*/
-export type InitialStateType={
-    users: UsersType[]
+
 }
+type photosType={
+    small: string
+    large: string
+}
+
+export type InitialStateType={
+    users: UsersType[],
+    pageSize: number,
+    totalUsersCount: number,
+    currentPage: number,
+    isFetching: boolean,
+    followingInProgress: number[]
+  }
 const initialState={
-    users: []
+    users: [],
+    pageSize: 10,
+    totalUsersCount: 0,
+    currentPage: 1,
+    isFetching: true,
+    followingInProgress: [0]
 }
 export const usersReducer= (state: InitialStateType=initialState, action: ActionType):InitialStateType=>{
 
@@ -32,34 +43,84 @@ export const usersReducer= (state: InitialStateType=initialState, action: Action
                     el.id===action.userId?{...el, followed:false} : el)}
         }
         case "SET-USERS":{
-            debugger
-            console.log(state, action.users)
-            return {...state, users: [...state.users, ...action.users]}
+
+            return {...state, users: [...action.users, ...state.users]}
+        }
+        case "CURRENT-PAGE":{
+            return {...state, currentPage: action.currentPage}
+        }
+        case "TOTAL-USER-COUNT":{
+            return {...state, totalUsersCount: action.usersCount}
+        }
+        case "TOGAL-IS-FETCHING":{
+            return {...state, isFetching:action.fetching}
+        }
+        case "TOGAL-IS-FOLLOWING-PROGRESS":{
+            return {...state,
+                followingInProgress:action.payload.dispatch ?
+                    [...state.followingInProgress, action.payload.id]
+                    : state.followingInProgress.filter(id=>id!= action.payload.id)}
         }
         default: return state
     }
 }
 export type ActionType=FollowACType |
                        UnFollowACType |
-                       SetUsersACType
-type FollowACType=ReturnType<typeof followAC>
-export const followAC=(userId:number)=>{
+                       SetUsersACType |
+                       setCurrentPageACType |
+                       setTotalUsersCountACType |
+                       setIsFetchingACType |
+                       setFollowingProgressACType
+type FollowACType=ReturnType<typeof follow>
+export const follow=(userId:number)=>{
     return{
         type:'FOLLOW',
         userId
     }as const
 }
-type UnFollowACType=ReturnType<typeof unFollowAC>
-export const unFollowAC=(userId:number)=>{
+type UnFollowACType=ReturnType<typeof unFollow>
+export const unFollow=(userId:number)=>{
     return{
         type:'UNFOLLOW',
         userId
     }as const
 }
-type SetUsersACType=ReturnType<typeof setUsersAC>
-export const setUsersAC=(users:UsersType[])=>{
+type SetUsersACType=ReturnType<typeof setUsers>
+export const setUsers=(users:UsersType[])=>{
     return{
         type:'SET-USERS',
         users
+    }as const
+}
+
+type setCurrentPageACType=ReturnType<typeof setCurrentPage>
+export const setCurrentPage=(currentPage:number)=>{
+    return{
+        type:'CURRENT-PAGE',
+        currentPage
+    }as const
+}
+type setTotalUsersCountACType=ReturnType<typeof setTotalUsersCount>
+export const setTotalUsersCount=(usersCount:number)=>{
+    return{
+        type:'TOTAL-USER-COUNT',
+        usersCount
+    }as const
+}
+type setIsFetchingACType=ReturnType<typeof setIsFetching>
+export const setIsFetching=(fetching:boolean)=>{
+    return{
+        type:'TOGAL-IS-FETCHING',
+        fetching
+    }as const
+}
+type setFollowingProgressACType=ReturnType<typeof setFollowingProgress>
+export const setFollowingProgress=(id:number, dispatch:boolean)=>{
+    return{
+        type:'TOGAL-IS-FOLLOWING-PROGRESS',
+        payload:{
+            id,
+          dispatch
+        }
     }as const
 }

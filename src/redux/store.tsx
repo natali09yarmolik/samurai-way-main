@@ -27,6 +27,7 @@ export type dialogPageType={
 export type profilePageType={
     posts: Array<postDataType>
     newPostText:string
+
 }
 export type stateType={
     dialogPage:dialogPageType
@@ -84,7 +85,7 @@ export let store:storeType= {
         this._callSubscriber = callback
     },
     dispatch(action: dispatchProfileActionType | dispatchDialogsActionType) {
-        this._state.profilePage = profileReducer(this._state.profilePage, action)
+      /*  this._state.profilePage = profileReducer(this._state.profilePage, action)*/
         this._state.dialogPage = dialogsReducer(this._state.dialogPage, action)
         this._state.sideBar = sideBarReducer(this._state.sideBar, action)
 
