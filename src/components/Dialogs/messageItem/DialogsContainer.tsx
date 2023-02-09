@@ -2,14 +2,18 @@ import React from 'react';
 import {changeMessageAC, onClickAddMessageAC} from "../../../redux/dialogsReducer";
 import {Dialogs} from "../Dialogs";
 import {connect} from "react-redux";
-import {Dispatch} from "redux";
+import {compose, Dispatch} from "redux";
 import {AppStateType} from "../../../redux/reduxStore";
+import {Redirect} from "react-router-dom";
+import {withAuthRedirect} from "../../HOC/withAuthRedirect";
+import {getUserProfile} from "../../../redux/profileReducer";
 
 
 
 const mapStateToProps=(state:AppStateType)=>{
     return{
-dialogPage: state.dialogsPage
+        dialogPage: state.dialogsPage,
+        //isAuth: state.auth.isAuth
     }
 }
 const mapDispatchToProps=(dispatch:Dispatch)=>{
@@ -18,4 +22,9 @@ const mapDispatchToProps=(dispatch:Dispatch)=>{
         onClickButton: ()=>{dispatch(onClickAddMessageAC())}
     }
 }
-export const DialogsContainer=connect(mapStateToProps,mapDispatchToProps)(Dialogs)
+
+//let AuthRedirectComponent = withAuthRedirect(Dialogs)
+const DialogsContainer=compose<React.ComponentType>(connect(mapStateToProps,mapDispatchToProps),
+    withAuthRedirect)(Dialogs)
+export default DialogsContainer
+//export const DialogsContainer=connect(mapStateToProps,mapDispatchToProps)(AuthRedirectComponent)

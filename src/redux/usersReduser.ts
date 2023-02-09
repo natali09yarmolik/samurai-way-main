@@ -1,3 +1,4 @@
+import {UsersApi} from "../API/api";
 
 
 export type UsersType={
@@ -123,4 +124,39 @@ export const setFollowingProgress=(id:number, dispatch:boolean)=>{
           dispatch
         }
     }as const
+}
+
+export const getUsersThunkCreator=(currentPage:number, pageSize:number)=>{
+    return (dispatch:any)=>{
+        dispatch(setIsFetching(true))
+        UsersApi.getUsers(currentPage, pageSize)
+            .then((response)=>{
+                dispatch(setIsFetching(false))
+                dispatch(setUsers(response.data.items))
+                dispatch(setTotalUsersCount(response.data.totalCount))
+            })
+    }
+}
+export const followThunk=(id:number)=>{
+    return (dispatch:any)=>{
+        dispatch(setFollowingProgress(id, true))
+        UsersApi.deleteFollow(id).then((response)=>{
+
+            if(response.data.resultCode==0)
+            {dispatch(unFollow(id))}
+           dispatch(setFollowingProgress(id, false))
+        })
+    }
+}
+export const unFollowThunk=(id:number )=>{
+    return (dispatch:any)=>{
+        dispatch(setFollowingProgress(id, true))
+        UsersApi.postFollow(id).then(response=>{
+
+                if(response.data.resultCode==0)
+                { dispatch(follow(id))}
+                dispatch(setFollowingProgress(id, false))
+            }
+        )
+    }
 }

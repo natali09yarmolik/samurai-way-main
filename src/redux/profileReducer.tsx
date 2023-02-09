@@ -1,10 +1,12 @@
 import {v1} from "uuid";
-import {dispatchDialogsActionType} from "./dialogsReducer";
+import {ProfileAPI, UsersApi} from "../API/api";
+
 
 export type profilePageType={
     posts: Array<postDataType>
     newPostText:string
     profile: ProfileType | null
+    status: string
 
 }
 export type postDataType={
@@ -19,7 +21,8 @@ export type ProfileType={
     lookingForAJobDescription: string,
     fullName: string,
     userId:number,
-    photos: photosType
+    photos: photosType,
+
 }
 type contactsType={
     facebook:string | null,
@@ -38,11 +41,12 @@ type photosType={
 const ONCLICK_ADD ='ONCLICK-ADD'
 const UPDATE_NEW_POST_TEXT = "UPDATE-NEW-POST-TEXT"
 const SET_USER_PROFILE='SET-USER-PROFILE'
-
+const SET_STATUS='SET-STATUS'
 
 export type dispatchProfileActionType=onClickAddActionType |
                                       upDateNewPostTextActionType|
-                                      setUserProfileType
+                                      setUserProfileType |
+                                      setStatusType
 
 type onClickAddActionType= {
     type: "ONCLICK-ADD"
@@ -52,11 +56,14 @@ type upDateNewPostTextActionType= {
     newText:string
 }
 type setUserProfileType=ReturnType<typeof setUserProfile>
+
+type setStatusType=ReturnType<typeof setStatus>
 const initialState: profilePageType={
     posts: [{id: v1(), post: 'Hello! How are you!', likes: 23},
         {id: v1(), post: 'Its my first post', likes: 15}],
     newPostText: 'it-camasutra.com',
-    profile: null
+    profile: null,
+    status:''
 }
 export const profileReducer= (state: profilePageType=initialState, action: dispatchProfileActionType )=>{
     switch(action.type){
@@ -66,7 +73,6 @@ export const profileReducer= (state: profilePageType=initialState, action: dispa
                 post: state.newPostText,
                 likes: 6
             }
-
             return {...state, posts: [...state.posts, newPost], newPostText:''}
         }
         case UPDATE_NEW_POST_TEXT:{
@@ -76,11 +82,14 @@ export const profileReducer= (state: profilePageType=initialState, action: dispa
         case SET_USER_PROFILE:{
             return {...state, profile: action.profile}
         }
-
+        case "SET-STATUS":{
+            return{
+                ...state, status:action.payload.status
+            }
+        }
         default: return state
     }
-
-    }
+ }
 export const addPost=()=>{
     return{
         type:ONCLICK_ADD
@@ -98,4 +107,36 @@ export const setUserProfile=(profile:ProfileType)=>{
         profile
     }as const
 }
-
+export const getUserProfile=(userID:string)=>{
+    return (dispatch:any)=>{
+        if(!userID){
+            userID='27268'
+        }
+        UsersApi.getProfile(userID)
+            .then(data=>dispatch(setUserProfile(data)))
+    }
+}
+export const setStatus=(status:string)=>{
+    return{
+        type: 'SET-STATUS',
+        payload:{
+            status
+        }
+    }as const
+ }
+export const getStatus=(userID:string)=>{
+    return(dispatch:any)=>{
+        ProfileAPI.getStatus(userID).then((response)=>{
+            dispatch(setStatus(response.data))})
+    }
+}
+export const upDateStatus=(status:string)=>{
+    return(dispatch:any)=>{
+        ProfileAPI.upDateStatus(status).then((response)=>{
+            if(response.data.resultCode===0)
+            {
+                dispatch(setStatus(status))
+        }
+    })
+}
+}

@@ -1,3 +1,5 @@
+import {MyselfAPI} from "../API/api";
+
 export type InitialStateType={
     id: number | null,
     email: string | null,
@@ -29,4 +31,17 @@ export const setUserData=(userId:number, email:string, login:string)=>{
               email,
               login}
     }as const
+}
+
+export const getHeaderThunk=()=>{
+    return (dispatch:any)=>{
+        MyselfAPI.getHeader()
+            .then(data=>{
+                if(data.resultCode===0){
+                    let {id, login,email}=data.data
+                    dispatch(setUserData(id, email, login))
+                }
+            })
+
+    }
 }

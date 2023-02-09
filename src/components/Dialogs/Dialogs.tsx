@@ -3,6 +3,10 @@ import d from './Dialogs.module.css'
 import {Dialog} from "./dialogItem/dialogsItem";
 import {Message} from "./messageItem/messageItems";
 import {dialogPageType} from "../../redux/store";
+import {Redirect} from "react-router-dom";
+import {AppStateType} from "../../redux/reduxStore";
+import {withAuthRedirect} from "../HOC/withAuthRedirect";
+import {connect} from "react-redux";
 
 
 type dialogsPropsType = {
@@ -10,8 +14,9 @@ type dialogsPropsType = {
     dialogPage: dialogPageType
     onChangeMessage: (newMessage: string) => void
     onClickButton: () => void
+    isAuth:boolean
 }
-export const Dialogs = (props: dialogsPropsType) => {
+ export const Dialogs = (props: dialogsPropsType) => {
 
     let dialogElements = props.dialogPage.dialogs.map((el) =>
         <Dialog key={el.id} name={el.name} id={el.id}/>);
@@ -25,7 +30,11 @@ export const Dialogs = (props: dialogsPropsType) => {
     const onClickButton = () => {
         props.onClickButton()
     }
-
+ /*   if(!props.isAuth)
+    {
+        return <Redirect to={"/login"}/>
+    }
+*/
     return (<div className={d.dialogs}>
         <div className={d.dialogItems}>
             {dialogElements}
@@ -44,3 +53,11 @@ export const Dialogs = (props: dialogsPropsType) => {
         </div>
     </div>)
 }
+
+
+/*
+export const AuthRedirectComponent=(props: dialogsPropsType)=>{
+    if(!props.isAuth)
+    {return <Redirect to={"/login"}/>}
+    return <Dialogs {...props}/>
+}*/

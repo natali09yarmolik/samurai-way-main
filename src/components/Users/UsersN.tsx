@@ -1,7 +1,7 @@
 import React from "react";
 import s from "./users.module.css";
 import userPhoto from "../../Avatars/ava-vk-animal-91.jpg";
-import {setFollowingProgress, UsersType} from "../../redux/usersReduser";
+import {setFollowingProgress, unFollowThunk, UsersType} from "../../redux/usersReduser";
 import {NavLink} from "react-router-dom";
 import {UsersApi} from "../../API/api";
 
@@ -16,6 +16,8 @@ type UsersNType={
     follow: (id:number)=>void
     setFollowingProgress:(id:number, dispatch:boolean)=>void
     followingInProgress:number[]
+    followThunk:(id:number)=>void
+    unFollowThunk:(id:number)=>void
 
 }
 
@@ -46,27 +48,11 @@ export const UsersN =(props:UsersNType)=>{
                 </div>
                 <div>
                     {el.followed ?
-                        <button disabled={props.followingInProgress.some(id=>id===el.id)} onClick={() => {
-
-                            UsersApi.deleteFollow(el.id).then(data=>{
-                                    if(data.resultCode==0)
-                                    { props.unFollow(el.id)}
-                                props.setFollowingProgress(el.id, true)
-                                })
-                        }
-
-                        }>unFollowed</button>
-                        : <button disabled={props.followingInProgress.some(id=>id===el.id)} onClick={() =>{
-
-                            UsersApi.postFollow(el.id).then(data=>{
-                                    if(data.resultCode==0)
-                                   { props.follow(el.id)}
-                                    props.setFollowingProgress(el.id, false)
-                                   }
-                                   )
-
-
-
+                        <button disabled={props.followingInProgress.some((id)=> {return id===el.id})} onClick={() => {
+                        props.followThunk(el.id)
+                        }}>unFollowed</button>
+                        : <button disabled={props.followingInProgress.some(id=>id==el.id)} onClick={() =>{
+                            props.unFollowThunk(el.id)
                         }} >followed</button>}
                 </div>
             </div>
